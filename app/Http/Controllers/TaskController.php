@@ -13,7 +13,7 @@ class TaskController extends Controller
     public function index()
     {
         $tasks = Task::all();
-        return view('show');
+        return view('index', ['tasks' => $tasks]);
     }
 
     /**
@@ -30,22 +30,25 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
-
+            'title' => 'required|unique:tasks,title',
+            'description' => 'required'
+        ],[
+            'title.unique' => 'Title is already been taken'
+        ]
+    );
         Task::create([
             'title' => $request->title,
-            'description' =>$request->title
+            'description' => $request->description,
+            'is_completed' => false
         ]);
 
-        return redirect()->route('show');
+        return redirect()->route('tasks.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show(string $id)
     {
         //
     }
@@ -53,24 +56,39 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit(string $id)
     {
-        return view('edit');
+        $data = Task::findOrFail($id);
+       
+        return view('edit', ['data' => $data]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'tit' => 'required|unique:tasks,title',
+            'des' => 'required',
+            'status' => 'required',
+        ]);
+        Task::findOrFail($id)->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'is_completed' => $request->status
+        ]);
+
+        return redirect()->route('tasks.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(string $id)
     {
-        //
+        Task::findOrFail($id)->delete();
+
+        return redirect()->route('tasks.index');
     }
 }

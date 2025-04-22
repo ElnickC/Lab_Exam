@@ -15,22 +15,42 @@
             <div class="col col-4">
                 <div class="card shadow">
                     <div class="card-body">
-                                <form method="POST" action="{{route('posts.store')}}">
-                                 @csrf
+                        <h1>Create Task:</h1>
+    <form action="{{route('tasks.store')}}" method="post" class="m-0 mt-3">
+        @csrf
+        <div class="row justify-content-center">
+            <div class="col col-12">
+                <label for="title"><h4>Title:</h4></label>
+                <input type="text" name="title" class="form-control" value="{{old('title')}}">
+                @error('title')
+                    <div class="text-danger">
+                        <p>{{$message}}</p>
+                    </div>
+                @enderror
+            </div>
+        </div>
 
-                                 <div class="mb-3">
-                                    <label class="form-label">Title</label>
-                                    <input type="text" name="title" class="form-control" value="{{old('title')}}" required>
-                                 </div>
+        <div class="row justify-content-center mt-3">
+            <div class="col col-12">
+                <label for="description"><h4>Description:</h4></label>
+                <textarea name="description" id="description" rows="2" class="form-control">{{old('description')}}</textarea>
+                @error('description')
+                    <div class="text-danger">
+                        <p>{{$message}}</p>
+                    </div>
+                @enderror
+            </div>
+        </div>
 
-                                 <div class="mb-3">
-                                    <label class="form-label">Description</label>
-                                    <textarea name="description" class="form-control" rows="4" required></textarea>
-                                 </div>
-
-                                 <button type="submit" class="btn btn-primary w-100">Save</button>
-
-                    </form>
+        <div class="row justify-content-center mt-5">
+            <div class="col col-6">
+                <button type="submit" class="btn btn-secondary w-100"><h5>Add</h5></button>
+            </div>
+            <div class="col col-6">
+                <a href="{{route('tasks.index')}}" class="btn btn-dark w-100"><h5>Cancel</h5></a>
+            </div>
+        </div>
+    </form>
                            
                     </div>
                 </div>
